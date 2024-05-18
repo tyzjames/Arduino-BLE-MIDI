@@ -413,7 +413,19 @@ public:
 
 struct MySettings : public MIDI_NAMESPACE::DefaultSettings
 {
+    static const bool UseRunningStatus = false;
+
+    static const bool HandleNullVelocityNoteOnAsNoteOff = true;
+
     static const bool Use1ByteParsing = false;
+
+    static const unsigned SysExMaxSize = 2048;
+
+    static const bool UseSenderActiveSensing = false;
+
+    static const bool UseReceiverActiveSensing = false;
+
+    static const uint16_t SenderActiveSensingPeriodicity = 0;
 };
 
 END_BLEMIDI_NAMESPACE

@@ -30,12 +30,14 @@ class BLEMIDI_Transport
 
 private:
     byte mRxBuffer[Settings::MaxBufferSize];
-    unsigned mRxIndex = 0;
+    uint32_t mRxIndex = 0;
 
     byte mTxBuffer[Settings::MaxBufferSize]; // minimum 5 bytes
-    unsigned mTxIndex = 0;
+    uint32_t mTxIndex = 0;
 
     char mDeviceName[24];
+    char mVendorName[32];
+    char mModelName[32];
 
     uint8_t mTimestampLow;
 
@@ -43,6 +45,17 @@ private:
     T mBleClass;
 
 public:
+    BLEMIDI_Transport(const char *deviceName, const char *vendorName, const char *modelName)
+    {
+        strncpy(mDeviceName, deviceName, sizeof(mDeviceName));
+        strncpy(mVendorName, vendorName, sizeof(mVendorName));
+        strncpy(mModelName, modelName, sizeof(mModelName));
+
+        mRxIndex = 0;
+        mTxIndex = 0;
+    }
+
+
     BLEMIDI_Transport(const char *deviceName)
     {
         strncpy(mDeviceName, deviceName, sizeof(mDeviceName));
@@ -56,7 +69,7 @@ public:
 
     void begin()
     {
-        mBleClass.begin(mDeviceName, this);
+        mBleClass.begin(mDeviceName, mVendorName, mModelName, this);
     }
 
     void end()
@@ -187,9 +200,11 @@ public:
     void (*_connectedCallback)() = nullptr;
     void (*_disconnectedCallback)() = nullptr;
 
-    BLEMIDI_Transport &setName(const char *deviceName)
+    BLEMIDI_Transport &setName(const char *deviceName, const char *vendorName, const char *modelName)
     {
         strncpy(mDeviceName, deviceName, sizeof(mDeviceName));
+        strncpy(mVendorName, vendorName, sizeof(mVendorName));
+        strncpy(mModelName, modelName, sizeof(mModelName));
         return *this;
     };
 
